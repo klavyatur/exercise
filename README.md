@@ -14,7 +14,7 @@ Preferred languages
 
 Write a program which
 - [ ] Creates a http web server
-- [ ] Consumes a API from two _Open Data Sources_
+- [ ] Consumes a API from two different _Open Data Sources_
 - [ ] Renders the respective payloads in a view
 
 Bonus
