@@ -1,9 +1,9 @@
 import React from "react";
-import DisplayData from './components/DisplayData';
+import DisplaySchoolData from './components/DisplaySchoolData';
 
 function App() {
   return (
-    <DisplayData />
+    <DisplaySchoolData />
   );
 }
 

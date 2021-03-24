@@ -1,11 +1,15 @@
 html {
     height: 100vh;
-    border: solid rgb(225, 225, 225);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: top;
+    margin-top: 3em;
     font-size: 1.5em;
     font-weight: bold;
     color: rgb(225, 225, 225);
     background-color: rgb(7, 7, 7);
+}
+
+.school a {
+    color: rgb(164, 183, 245);
 }

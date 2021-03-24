@@ -1,26 +1,21 @@
+import e from 'cors';
 import React, { useEffect, useState } from 'react';
 import API from '../reactAPI';
+import School from './School';
 
-export default function DisplayDataR() {
+export default function DisplaySchoolData() {
 
   const [ zip, setZip ] = useState(12345);
   const [ dist, setDist ] = useState(10)
   const [ submitClicked, setSubmitClicked ] = useState(false)
-  const [ schoolList, setSchoolList ] = useState(<></>);
+  const [ schoolList, setSchoolList ] = useState([]);
 
     useEffect(() => {
-    API.getAPIResponse(zip, dist)
+    API.getAPISchools(zip, dist)
     .then((res) => {
       console.log(res.data.results);
       let schools = res.data.results;
-      let list = schools.map((el) => {
-       return <div key={el.id}>
-          <div>Name: <a href={el['school.school_url']}>{el['school.name']}</a></div>
-          <div>Location: {el['school.city']}, {el['school.state']}</div>
-        </div>
-      });
-      console.log(list);
-      setSchoolList(list);
+      setSchoolList(schools);
     })
     .catch(err => console.log('getDetails: ERROR: ', err));
   }, [submitClicked])
@@ -29,6 +24,7 @@ export default function DisplayDataR() {
     e.preventDefault();
     setSubmitClicked(!submitClicked)
   }
+
 
   return (
     <div>
@@ -54,7 +50,13 @@ export default function DisplayDataR() {
       </div>
       <div>
         <h3>Schools:</h3>
-        {schoolList}
+          {schoolList.map((el) => <School 
+            id={el.id}
+            url={el['school.school_url']}
+            name={el['school.name']}
+            city={el['school.city']}
+            state={el['school.state']}
+            />)}
       </div>
     </div>
   )
