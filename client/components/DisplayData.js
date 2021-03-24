@@ -3,18 +3,16 @@ import API from '../reactAPI';
 
 export default function DisplayDataR() {
 
-  const [ planet, setPlanet ] = useState('');
-
-  useEffect(() => {
+    useEffect(() => {
     API.getAPIResponse()
     .then((res) => {
-      setPlanet(res.data.name);
+      console.log(res.data.results);
     })
     .catch(err => console.log('getDetails: ERROR: ', err));
   }, [])
  
 
   return (
-    <div>Welcome to {planet}</div>
+    <div>Welcome to </div>
   )
 }
