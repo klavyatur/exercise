@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 
 import API from '../reactAPI';
 import School from './School';
@@ -16,6 +15,7 @@ export default function DisplaySchoolData() {
   const [ parkState, setParkState ] = useState('NY');
   const [ parkList, setParkList ] = useState([]);
 
+  // useEffect hook to get school data -- updates when 'submitClicked' is changed
   useEffect(() => {
     API.getAPISchools(zip, dist)
     .then((res) => {
@@ -26,7 +26,8 @@ export default function DisplaySchoolData() {
     })
     .catch(err => console.log('getDetails: ERROR: ', err));
   }, [submitClicked])
- 
+
+ // useEffect hook to get NPS data -- updates when 'parksUpdated' is changed
   useEffect(() => {
     API.getAPIParks(parkState)
     .then((res) => {
@@ -36,16 +37,17 @@ export default function DisplaySchoolData() {
     .catch(err => console.log('getDetails: ERROR: ', err));
   }, [parksUpdated])
 
+  // changes 'submitClicked' from true to false or false to true, triggering a 'get' request to the college scorecard API
   function buttonClick(e) {
     e.preventDefault();
     setSubmitClicked(!submitClicked)
   }
 
+  // updates 'parkState' to match the state from the button (set by college location)
+  // flips 'parksUpdated' from false to true or true to falls, triggering a 'get' request to the NPS API
   function findParks(e) {
     e.preventDefault();
-
     let state = e.target.id;
-  
     setParkState(state);    
     setParksUpdated(!parksUpdated)
   }
