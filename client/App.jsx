@@ -1,9 +1,12 @@
 import React from "react";
-import DisplaySchoolData from './components/DisplaySchoolData';
+import DisplayData from './components/DisplayData';
+// import DisplayNPSData from './components/DisplayNPSData';
 
 function App() {
   return (
-    <DisplaySchoolData />
+    <div className="grid">
+    <DisplayData />
+    </div>
   );
 }
 

@@ -1,16 +1,21 @@
-import e from 'cors';
+
 import React, { useEffect, useState } from 'react';
 import API from '../reactAPI';
 import School from './School';
+import Park from './Park';
 
 export default function DisplaySchoolData() {
 
   const [ zip, setZip ] = useState(12345);
   const [ dist, setDist ] = useState(10)
-  const [ submitClicked, setSubmitClicked ] = useState(false)
+  const [ submitClicked, setSubmitClicked ] = useState(false);
   const [ schoolList, setSchoolList ] = useState([]);
+  
+  const [ parksUpdated, setParksUpdated ] = useState(false);
+  const [ parkState, setParkState ] = useState('NY');
+  const [ parkList, setParkList ] = useState([]);
 
-    useEffect(() => {
+  useEffect(() => {
     API.getAPISchools(zip, dist)
     .then((res) => {
       console.log(res.data.results);
@@ -20,19 +25,38 @@ export default function DisplaySchoolData() {
     .catch(err => console.log('getDetails: ERROR: ', err));
   }, [submitClicked])
  
+  useEffect(() => {
+    API.getAPIParks(parkState)
+    .then((res) => {
+      let parks = res.data.data; 
+      setParkList(parks);
+      console.log('parklist', parkList);           
+    })
+    .catch(err => console.log('getDetails: ERROR: ', err));
+  }, [parksUpdated])
+
   function buttonClick(e) {
     e.preventDefault();
     setSubmitClicked(!submitClicked)
   }
 
+  function findParks(e) {
+    e.preventDefault();
+
+    let state = e.target.id;
+    console.log('findparks', state)
+
+    setParkState(state);    
+    setParksUpdated(!parksUpdated)
+  }
 
   return (
-    <div>
+    <div className='grid'>
       <div>
-        <form style={{ display: 'flex' }}>
+        <form>
           Find schools near 
           <input 
-            type='tezt' 
+            type='text' 
             defaultValue='12345'
             onChange={(e) => setZip(e.target.value)}
             style={{ padding: '5px', margin: '10px' }}
@@ -56,7 +80,18 @@ export default function DisplaySchoolData() {
             name={el['school.name']}
             city={el['school.city']}
             state={el['school.state']}
+            findParks={findParks}
             />)}
+      </div>
+      <div>
+        <h3>Parks:</h3>
+          {parkList.map((el) => <Park 
+            id={el.id}
+            url={el.url}
+            name={el.name}
+            descr={el.description}
+            state={el.states}
+          />)}
       </div>
     </div>
   )
