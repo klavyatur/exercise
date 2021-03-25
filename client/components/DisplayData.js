@@ -1,5 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
+
 import API from '../reactAPI';
 import School from './School';
 import Park from './Park';
@@ -18,9 +19,10 @@ export default function DisplaySchoolData() {
   useEffect(() => {
     API.getAPISchools(zip, dist)
     .then((res) => {
-      console.log(res.data.results);
       let schools = res.data.results;
       setSchoolList(schools);
+      setParkState(schools[0]['school.state']);
+      setParksUpdated(!parksUpdated);
     })
     .catch(err => console.log('getDetails: ERROR: ', err));
   }, [submitClicked])
@@ -29,8 +31,7 @@ export default function DisplaySchoolData() {
     API.getAPIParks(parkState)
     .then((res) => {
       let parks = res.data.data; 
-      setParkList(parks);
-      console.log('parklist', parkList);           
+      setParkList(parks);    
     })
     .catch(err => console.log('getDetails: ERROR: ', err));
   }, [parksUpdated])
@@ -44,35 +45,33 @@ export default function DisplaySchoolData() {
     e.preventDefault();
 
     let state = e.target.id;
-    console.log('findparks', state)
-
+  
     setParkState(state);    
     setParksUpdated(!parksUpdated)
   }
 
   return (
-    <div className='grid'>
-      <div>
+    <div>
+      <div className="searchForm">
         <form>
           Find schools near 
           <input 
             type='text' 
             defaultValue='12345'
             onChange={(e) => setZip(e.target.value)}
-            style={{ padding: '5px', margin: '10px' }}
           /> 
           zipcode (within 
           <input 
             type='text' 
             defaultValue='10'
             onChange={(e) => setDist(e.target.value)}
-            style={{ padding: '5px', margin: '10px' }}
           /> 
           miles). 
           <button type='button' onClick={buttonClick} style={{ padding: '5px', margin: '10px' }}>Search</button>
         </form>
       </div>
-      <div>
+      <div className='grid'>
+        <div className='school'>
         <h3>Schools:</h3>
           {schoolList.map((el) => <School 
             id={el.id}
@@ -81,9 +80,10 @@ export default function DisplaySchoolData() {
             city={el['school.city']}
             state={el['school.state']}
             findParks={findParks}
+            parkState={parkState}
             />)}
-      </div>
-      <div>
+        </div>
+        <div className='park'>
         <h3>Parks:</h3>
           {parkList.map((el) => <Park 
             id={el.id}
@@ -92,6 +92,7 @@ export default function DisplaySchoolData() {
             descr={el.description}
             state={el.states}
           />)}
+          </div>
       </div>
     </div>
   )
